@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background-color: #080808;
+    color: #ffffff;
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+  }
+
+  .glass-input {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .glass-input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .glass-input:focus {
+    border-color: rgba(232, 41, 76, 0.6);
+    box-shadow: 0 0 0 2px rgba(232, 41, 76, 0.15);
+  }
+
+  .btn-cherry {
+    background: #E8294C;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 0 20px rgba(232, 41, 76, 0.4);
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-cherry:hover {
+    background: #FF4466;
+    box-shadow: 0 0 35px rgba(232, 41, 76, 0.6);
+    transform: translateY(-1px);
+  }
+
+  .btn-cherry:active {
+    transform: translateY(0);
+  }
+
+  .btn-ghost {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-weight: 500;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  .gradient-bg {
+    background: radial-gradient(ellipse at 20% 50%, rgba(100, 0, 30, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(60, 0, 40, 0.12) 0%, transparent 50%),
+                #080808;
+  }
+
+  .text-cherry {
+    color: #E8294C;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
