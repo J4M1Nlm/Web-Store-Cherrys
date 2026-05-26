@@ -1,10 +1,13 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import NavBar from './components/NavBar';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import ToastContainer from './components/ui/Toast';
 import CartSync from './components/CartSync';
+import { useAuthStore } from './store/authStore';
+import { jwtDecode } from './lib/jwt';
 
 import Home from './pages/Home';
 import Products from './pages/Products';
@@ -40,6 +43,35 @@ import InventorySearch from './pages/admin/InventorySearch';
 import ReviewList from './pages/admin/ReviewList';
 import UserList from './pages/admin/UserList';
 
+interface JwtPayload {
+  sub: string;
+  role?: string;
+  roles?: string[];
+  [key: string]: unknown;
+}
+
+function HomePage() {
+  const token = useAuthStore((s) => s.token);
+  const [redirect, setRedirect] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (!token) { setDone(true); return; }
+    try {
+      const payload = jwtDecode<JwtPayload>(token);
+      const roles = payload.roles ?? [payload.role].filter(Boolean);
+      if (roles.some((r) => r?.toUpperCase() === 'ADMIN')) {
+        setRedirect('/admin');
+      }
+    } catch { /* ignore invalid token */ }
+    setDone(true);
+  }, [token]);
+
+  if (redirect) return <Navigate to={redirect} replace />;
+  if (!done) return null;
+  return <Home />;
+}
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -56,7 +88,7 @@ export default function App() {
         <CartSync />
         <NavBar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:slug" element={<ProductDetail />} />
           <Route path="/login" element={<Login />} />
