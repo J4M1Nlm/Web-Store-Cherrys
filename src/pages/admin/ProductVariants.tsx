@@ -57,6 +57,7 @@ export default function ProductVariants() {
       sku: form.sku,
       variantName: form.variantName || null,
       priceCents: Math.round(Number(form.pricePesos) * 100),
+      currency: product?.currency ?? 'MXN',
       stockOnHand: Number(form.stockOnHand) || 0,
       attributes: form.attributes,
     }),
@@ -69,6 +70,7 @@ export default function ProductVariants() {
       sku: form.sku,
       variantName: form.variantName || null,
       priceCents: Math.round(Number(form.pricePesos) * 100),
+      currency: product?.currency ?? 'MXN',
       stockOnHand: Number(form.stockOnHand) || 0,
       attributes: form.attributes,
     }),
@@ -85,7 +87,7 @@ export default function ProductVariants() {
   const resetForm = () => {
     setShowForm(false);
     setEditVariant(null);
-    setForm({ sku: '', variantName: '', pricePesos: '', stockOnHand: '', attributes: {} });
+    setForm({ sku: '', variantName: '', pricePesos: product ? String(product.basePriceCents / 100) : '', stockOnHand: '', attributes: {} });
     setAttrKey('');
     setAttrValue('');
   };
@@ -119,7 +121,7 @@ export default function ProductVariants() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.sku || !form.pricePesos) { error('SKU and price are required'); return; }
+    if (!form.sku) { error('SKU is required'); return; }
     editVariant ? updateMutation.mutate() : createMutation.mutate();
   };
 
@@ -152,7 +154,7 @@ export default function ProductVariants() {
       </div>
 
       {!showForm && (
-        <GlassButton variant="primary" size="sm" onClick={() => setShowForm(true)}>
+        <GlassButton variant="primary" size="sm" onClick={() => { resetForm(); setShowForm(true); }}>
           <Plus size={14} /> Add Variant
         </GlassButton>
       )}
@@ -165,10 +167,7 @@ export default function ProductVariants() {
               <GlassInput label="SKU *" value={form.sku} onChange={(e) => setForm((f) => ({ ...f, sku: e.target.value }))} placeholder="SKU-001" />
               <GlassInput label="Name" value={form.variantName} onChange={(e) => setForm((f) => ({ ...f, variantName: e.target.value }))} placeholder="Variant name" />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <GlassInput label="Price (MXN) *" type="number" step="0.01" value={form.pricePesos} onChange={(e) => setForm((f) => ({ ...f, pricePesos: e.target.value }))} placeholder="0.00" />
-              <GlassInput label="Stock" type="number" value={form.stockOnHand} onChange={(e) => setForm((f) => ({ ...f, stockOnHand: e.target.value }))} placeholder="0" />
-            </div>
+            <GlassInput label="Stock" type="number" value={form.stockOnHand} onChange={(e) => setForm((f) => ({ ...f, stockOnHand: e.target.value }))} placeholder="0" />
 
             {/* Dynamic attributes */}
             <div>
