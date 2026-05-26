@@ -19,9 +19,9 @@ export default function GlassModal({ open, onClose, title, children, maxWidth = 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className={`relative glass-card w-full ${maxWidth} p-6 animate-slide-up`}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm animate-fade-in" onClick={onClose} />
+      <div className={`relative glass-card w-full ${maxWidth} p-6 animate-scale-in`}>
         {title && (
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-lg font-semibold text-white">{title}</h2>

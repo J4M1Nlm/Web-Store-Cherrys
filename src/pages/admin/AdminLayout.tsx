@@ -6,17 +6,18 @@ import api from '../../lib/axios';
 import type { User } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 import GlassButton from '../../components/ui/GlassButton';
+import PageTransition from '../../components/PageTransition';
 
 const navItems = [
-  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { to: '/admin/products', label: 'Products', icon: Package },
-  { to: '/admin/categories', label: 'Categories', icon: Layers },
-  { to: '/admin/artists', label: 'Artists', icon: Users2 },
-  { to: '/admin/orders', label: 'Orders', icon: ShoppingBag },
-  { to: '/admin/coupons', label: 'Coupons', icon: Tag },
-  { to: '/admin/inventory', label: 'Inventory', icon: Box },
-  { to: '/admin/reviews', label: 'Reviews', icon: Star },
-  { to: '/admin/users', label: 'Users', icon: UserCog },
+  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true, delay: 'stagger-1' },
+  { to: '/admin/products', label: 'Products', icon: Package, delay: 'stagger-2' },
+  { to: '/admin/categories', label: 'Categories', icon: Layers, delay: 'stagger-3' },
+  { to: '/admin/artists', label: 'Artists', icon: Users2, delay: 'stagger-4' },
+  { to: '/admin/orders', label: 'Orders', icon: ShoppingBag, delay: 'stagger-5' },
+  { to: '/admin/coupons', label: 'Coupons', icon: Tag, delay: 'stagger-6' },
+  { to: '/admin/inventory', label: 'Inventory', icon: Box, delay: 'stagger-7' },
+  { to: '/admin/reviews', label: 'Reviews', icon: Star, delay: 'stagger-8' },
+  { to: '/admin/users', label: 'Users', icon: UserCog, delay: 'stagger-8' },
 ];
 
 export default function AdminLayout() {
@@ -53,20 +54,20 @@ export default function AdminLayout() {
         </div>
 
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-          {navItems.map(({ to, label, icon: Icon, exact }) => {
+          {navItems.map(({ to, label, icon: Icon, exact, delay }) => {
             const active = exact ? pathname === to : pathname.startsWith(to);
             return (
               <Link
                 key={to}
                 to={to}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${delay} ${
                   active
-                    ? 'bg-cherry/20 text-cherry border border-cherry/30'
+                    ? 'bg-cherry/20 text-cherry border border-cherry/30 shadow-[0_0_20px_rgba(232,41,76,0.1)]'
                     : 'text-white/50 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <Icon size={16} />
+                <Icon size={16} className={active ? 'animate-pulse-glow' : ''} />
                 {label}
               </Link>
             );
@@ -86,7 +87,7 @@ export default function AdminLayout() {
 
       {/* Overlay */}
       {sidebarOpen && (
-        <div className="fixed inset-0 z-30 bg-black/60 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 z-30 bg-black/60 lg:hidden animate-fade-in" onClick={() => setSidebarOpen(false)} />
       )}
 
       {/* Main area */}
@@ -125,7 +126,9 @@ export default function AdminLayout() {
 
         {/* Content */}
         <main className="flex-1 p-4 lg:p-6 overflow-y-auto">
-          <Outlet />
+          <PageTransition>
+            <Outlet />
+          </PageTransition>
         </main>
       </div>
     </div>

@@ -7,6 +7,7 @@ import { formatPrice } from '../lib/format';
 import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 import StatusBadge from '../components/ui/StatusBadge';
+import PageTransition from '../components/PageTransition';
 
 export default function CheckoutSuccess() {
   const [params] = useSearchParams();
@@ -19,8 +20,9 @@ export default function CheckoutSuccess() {
   });
 
   return (
+    <PageTransition>
     <div className="gradient-bg min-h-screen pt-24 pb-16 flex items-start justify-center">
-      <div className="max-w-lg w-full mx-4 animate-slide-up">
+      <div className="max-w-lg w-full mx-4">
         <div className="text-center mb-8">
           <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-5 shadow-[0_0_40px_rgba(16,185,129,0.3)]">
             <CheckCircle size={40} className="text-emerald-400" />
@@ -71,5 +73,6 @@ export default function CheckoutSuccess() {
         </div>
       </div>
     </div>
+    </PageTransition>
   );
 }

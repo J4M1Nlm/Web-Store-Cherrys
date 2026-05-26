@@ -12,6 +12,7 @@ import { useToast } from '../store/toastStore';
 import { useAuthStore } from '../store/authStore';
 import { useCartStore } from '../store/cartStore';
 import type { CartResponse } from '../types';
+import PageTransition from '../components/PageTransition';
 
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -50,18 +51,15 @@ export default function ProductDetailPage() {
   }) ?? [];
   const activeVariants = filteredVariants.length > 0 ? filteredVariants : (product.variants ?? []);
 
-  // Get all unique attribute keys across variants
   const attributeKeys = Array.from(
     new Set(activeVariants.flatMap((v) => Object.keys(v.attributes)))
   );
 
-  // Get unique values for each attribute key
   const attributeOptions: Record<string, string[]> = {};
   for (const key of attributeKeys) {
     attributeOptions[key] = Array.from(new Set(activeVariants.map((v) => v.attributes[key]).filter(Boolean)));
   }
 
-  // Find variant matching selected attributes
   const matchedVariant = activeVariants.find((v) =>
     attributeKeys.every((k) => !selectedAttributes[k] || v.attributes[k] === selectedAttributes[k])
   ) ?? null;
@@ -88,141 +86,138 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="gradient-bg min-h-screen pt-24 pb-16">
-      <div className="max-w-6xl mx-auto px-4">
-        <Link to="/products" className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors text-sm mb-8">
-          <ChevronLeft size={16} />
-          Back to shop
-        </Link>
+    <PageTransition>
+      <div className="gradient-bg min-h-screen pt-24 pb-16">
+        <div className="max-w-6xl mx-auto px-4">
+          <Link to="/products" className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors text-sm mb-8 group">
+            <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+            Back to shop
+          </Link>
 
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
-          {/* Image */}
-          <div className="aspect-square glass-card overflow-hidden">
-            {product.images?.[0]?.url ? (
-              <img src={product.images[0].url} alt={product.name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <span className="text-white/10 text-6xl font-bold">CT</span>
-              </div>
-            )}
-          </div>
-
-          {/* Details */}
-          <div className="flex flex-col gap-6">
-            <div>
-              <div className="flex items-start justify-between gap-4">
-                <h1 className="text-2xl lg:text-3xl font-bold text-white leading-tight">{product.name}</h1>
-              </div>
-              <p className="text-3xl font-bold text-cherry mt-3">{formatPrice(price, displayVariant?.currency ?? 'MXN')}</p>
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
+            <div className="aspect-square glass-card overflow-hidden animate-scale-in">
+              {product.images?.[0]?.url ? (
+                <img src={product.images[0].url} alt={product.name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="text-white/10 text-6xl font-bold">CT</span>
+                </div>
+              )}
             </div>
 
-            {product.description && (
-              <p className="text-white/50 text-sm leading-relaxed">{product.description}</p>
-            )}
+            <div className="flex flex-col gap-6 animate-fade-in-up">
+              <div>
+                <div className="flex items-start justify-between gap-4">
+                  <h1 className="text-2xl lg:text-3xl font-bold text-white leading-tight">{product.name}</h1>
+                </div>
+                <p className="text-3xl font-bold text-cherry mt-3">{formatPrice(price, displayVariant?.currency ?? 'MXN')}</p>
+              </div>
 
-            {/* Dynamic attribute pickers */}
-            {attributeKeys.map((key) => (
-              <div key={key}>
-                <h3 className="text-xs font-medium text-white/40 uppercase tracking-widest mb-3">
-                  {key}: <span className="text-white/70 normal-case">{selectedAttributes[key] ?? ''}</span>
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {attributeOptions[key].map((val) => {
-                    const isSelected = selectedAttributes[key] === val;
-                    const variantWithAttr = activeVariants.find((v) => v.attributes[key] === val);
-                    const outOfStock = variantWithAttr ? variantWithAttr.stockOnHand === 0 : false;
-                    return (
-                      <button
-                        key={val}
-                        onClick={() => handleSelectAttribute(key, val)}
-                        disabled={outOfStock}
-                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
-                          isSelected
-                            ? 'bg-cherry text-white border-cherry shadow-[0_0_15px_rgba(232,41,76,0.4)]'
-                            : outOfStock
-                            ? 'opacity-30 cursor-not-allowed bg-white/5 text-white/40 border-white/10'
-                            : 'bg-white/7 text-white/70 border-white/10 hover:bg-white/12 hover:text-white hover:border-white/20'
+              {product.description && (
+                <p className="text-white/50 text-sm leading-relaxed">{product.description}</p>
+              )}
+
+              {attributeKeys.map((key) => (
+                <div key={key}>
+                  <h3 className="text-xs font-medium text-white/40 uppercase tracking-widest mb-3">
+                    {key}: <span className="text-white/70 normal-case">{selectedAttributes[key] ?? ''}</span>
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {attributeOptions[key].map((val) => {
+                      const isSelected = selectedAttributes[key] === val;
+                      const variantWithAttr = activeVariants.find((v) => v.attributes[key] === val);
+                      const outOfStock = variantWithAttr ? variantWithAttr.stockOnHand === 0 : false;
+                      return (
+                        <button
+                          key={val}
+                          onClick={() => handleSelectAttribute(key, val)}
+                          disabled={outOfStock}
+                          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
+                            isSelected
+                              ? 'bg-cherry text-white border-cherry shadow-[0_0_15px_rgba(232,41,76,0.4)]'
+                              : outOfStock
+                              ? 'opacity-30 cursor-not-allowed bg-white/5 text-white/40 border-white/10'
+                              : 'bg-white/7 text-white/70 border-white/10 hover:bg-white/12 hover:text-white hover:border-white/20'
+                          }`}
+                        >
+                          {val}
+                          {outOfStock && <span className="ml-1 text-xs opacity-60">&#8226;</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+
+              <div>
+                <h3 className="text-xs font-medium text-white/40 uppercase tracking-widest mb-3">Quantity</h3>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    className="w-10 h-10 glass-card flex items-center justify-center hover:bg-white/10 transition-colors text-white/70 hover:text-white rounded-xl"
+                  >
+                    <Minus size={14} />
+                  </button>
+                  <span className="w-10 text-center text-white font-medium">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity((q) => q + 1)}
+                    className="w-10 h-10 glass-card flex items-center justify-center hover:bg-white/10 transition-colors text-white/70 hover:text-white rounded-xl"
+                  >
+                    <Plus size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {!inStock && (
+                <GlassCard className="p-3 text-center text-sm text-red-400">
+                  Out of stock
+                </GlassCard>
+              )}
+
+              <GlassButton
+                variant="primary"
+                size="lg"
+                className="w-full"
+                onClick={handleAddToCart}
+                loading={addToCartMutation.isPending}
+                disabled={!inStock}
+              >
+                <ShoppingBag size={18} />
+                {inStock ? 'Add to Cart' : 'Out of Stock'}
+              </GlassButton>
+
+              {activeVariants.length > 0 && (
+                <div className="glass-card p-4">
+                  <h3 className="text-xs font-medium text-white/40 uppercase tracking-widest mb-3">All Variants</h3>
+                  <div className="space-y-2">
+                    {activeVariants.map((v) => (
+                      <div
+                        key={v.id}
+                        onClick={() => { setSelectedVariantId(v.id); setSelectedAttributes(v.attributes); }}
+                        className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all ${
+                          (selectedVariantId ?? activeVariants[0]?.id) === v.id
+                            ? 'bg-cherry/15 border border-cherry/30'
+                            : 'hover:bg-white/5 border border-transparent'
                         }`}
                       >
-                        {val}
-                        {outOfStock && <span className="ml-1 text-xs opacity-60">•</span>}
-                      </button>
-                    );
-                  })}
+                        <div>
+                          <p className="text-sm text-white/80">{v.variantName ?? v.sku}</p>
+                          <p className="text-xs text-white/40">{Object.entries(v.attributes).map(([k, val]) => `${k}: ${val}`).join(', ')}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-medium text-cherry">{formatPrice(v.priceCents, v.currency)}</p>
+                          <p className="text-xs text-white/30">{v.stockOnHand} left</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-
-            {/* Quantity */}
-            <div>
-              <h3 className="text-xs font-medium text-white/40 uppercase tracking-widest mb-3">Quantity</h3>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="w-10 h-10 glass-card flex items-center justify-center hover:bg-white/10 transition-colors text-white/70 hover:text-white rounded-xl"
-                >
-                  <Minus size={14} />
-                </button>
-                <span className="w-10 text-center text-white font-medium">{quantity}</span>
-                <button
-                  onClick={() => setQuantity((q) => q + 1)}
-                  className="w-10 h-10 glass-card flex items-center justify-center hover:bg-white/10 transition-colors text-white/70 hover:text-white rounded-xl"
-                >
-                  <Plus size={14} />
-                </button>
-              </div>
+              )}
             </div>
-
-            {!inStock && (
-              <GlassCard className="p-3 text-center text-sm text-red-400">
-                Out of stock
-              </GlassCard>
-            )}
-
-            <GlassButton
-              variant="primary"
-              size="lg"
-              className="w-full"
-              onClick={handleAddToCart}
-              loading={addToCartMutation.isPending}
-              disabled={!inStock}
-            >
-              <ShoppingBag size={18} />
-              {inStock ? 'Add to Cart' : 'Out of Stock'}
-            </GlassButton>
-
-            {/* Variants list */}
-            {activeVariants.length > 0 && (
-              <div className="glass-card p-4">
-                <h3 className="text-xs font-medium text-white/40 uppercase tracking-widest mb-3">All Variants</h3>
-                <div className="space-y-2">
-                  {activeVariants.map((v) => (
-                    <div
-                      key={v.id}
-                      onClick={() => { setSelectedVariantId(v.id); setSelectedAttributes(v.attributes); }}
-                      className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all ${
-                        (selectedVariantId ?? activeVariants[0]?.id) === v.id
-                          ? 'bg-cherry/15 border border-cherry/30'
-                          : 'hover:bg-white/5 border border-transparent'
-                      }`}
-                    >
-                      <div>
-                        <p className="text-sm text-white/80">{v.variantName ?? v.sku}</p>
-                        <p className="text-xs text-white/40">{Object.entries(v.attributes).map(([k, val]) => `${k}: ${val}`).join(', ')}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium text-cherry">{formatPrice(v.priceCents, v.currency)}</p>
-                        <p className="text-xs text-white/30">{v.stockOnHand} left</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
-    </div>
+    </PageTransition>
   );
 }
 

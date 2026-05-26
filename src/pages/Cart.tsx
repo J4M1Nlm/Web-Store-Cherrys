@@ -10,6 +10,7 @@ import GlassCard from '../components/ui/GlassCard';
 import { useCartStore } from '../store/cartStore';
 import { useToast } from '../store/toastStore';
 import { useAuthStore } from '../store/authStore';
+import PageTransition from '../components/PageTransition';
 
 export default function Cart() {
   const { token } = useAuthStore();
@@ -41,6 +42,7 @@ export default function Cart() {
 
   if (!token) {
     return (
+      <PageTransition>
       <div className="gradient-bg min-h-screen pt-24 flex items-center justify-center">
         <GlassCard className="p-10 text-center max-w-sm w-full mx-4">
           <ShoppingBag size={48} className="text-white/20 mx-auto mb-4" />
@@ -49,6 +51,7 @@ export default function Cart() {
           <Link to="/login"><GlassButton variant="primary" className="w-full">Sign in</GlassButton></Link>
         </GlassCard>
       </div>
+      </PageTransition>
     );
   }
 
@@ -68,6 +71,7 @@ export default function Cart() {
   const isEmpty = !cart || cart.items.length === 0;
 
   return (
+    <PageTransition>
     <div className="gradient-bg min-h-screen pt-24 pb-16">
       <div className="max-w-4xl mx-auto px-4">
         <h1 className="text-3xl font-bold text-white mb-8">Your Cart</h1>
@@ -85,8 +89,8 @@ export default function Cart() {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Items */}
             <div className="lg:col-span-2 space-y-3">
-              {cart.items.map((item) => (
-                <GlassCard key={item.id} className="p-4 flex gap-4">
+              {cart.items.map((item, i) => (
+                <GlassCard key={item.id} className={`p-4 flex gap-4 animate-stagger-${i + 1}`}>
                   <div className="w-20 h-20 rounded-xl overflow-hidden bg-white/5 flex-shrink-0">
                     {item.mainImageUrl ? (
                       <img src={item.mainImageUrl} alt={item.productName} className="w-full h-full object-cover" />
@@ -134,7 +138,7 @@ export default function Cart() {
 
             {/* Summary */}
             <div className="lg:col-span-1">
-              <GlassCard className="p-5 sticky top-24">
+              <GlassCard className="p-5 sticky top-24 card-hover">
                 <h2 className="font-semibold text-white mb-5">Order Summary</h2>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between text-white/50">
@@ -170,5 +174,6 @@ export default function Cart() {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 }

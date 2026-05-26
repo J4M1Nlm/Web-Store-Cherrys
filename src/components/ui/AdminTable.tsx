@@ -20,6 +20,11 @@ interface AdminTableProps<T> {
   emptyMessage?: string;
 }
 
+const rowDelay = (index: number) => {
+  const delays = ['animate-stagger-1','animate-stagger-2','animate-stagger-3','animate-stagger-4','animate-stagger-5','animate-stagger-6','animate-stagger-7','animate-stagger-8'];
+  return delays[index] || 'animate-stagger-8';
+};
+
 export default function AdminTable<T extends { id: number }>({
   columns, data, page, loading, onPageChange, actions, emptyMessage = 'No data'
 }: AdminTableProps<T>) {
@@ -59,8 +64,8 @@ export default function AdminTable<T extends { id: number }>({
                   </td>
                 </tr>
               ) : (
-                items.map((item) => (
-                  <tr key={item.id} className="hover:bg-white/5 transition-colors">
+                items.map((item, i) => (
+                  <tr key={item.id} className={`hover:bg-white/5 transition-colors duration-200 ${rowDelay(i)}`}>
                     {columns.map((col) => (
                       <td key={col.key} className={`px-4 py-3 text-white/70 ${col.className ?? ''}`}>
                         {col.render(item)}

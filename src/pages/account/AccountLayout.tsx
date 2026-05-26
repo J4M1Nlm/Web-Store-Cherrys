@@ -1,5 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { User, Package, MapPin } from 'lucide-react';
+import PageTransition from '../../components/PageTransition';
 
 const navItems = [
   { to: '/account', label: 'Profile', icon: User, exact: true },
@@ -58,7 +59,9 @@ export default function AccountLayout() {
           </div>
 
           <main className="flex-1 min-w-0">
-            <Outlet />
+            <PageTransition>
+              <Outlet />
+            </PageTransition>
           </main>
         </div>
       </div>

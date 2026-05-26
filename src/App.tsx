@@ -6,6 +6,7 @@ import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import ToastContainer from './components/ui/Toast';
 import CartSync from './components/CartSync';
+import ScrollToTop from './components/ScrollToTop';
 import { useAuthStore } from './store/authStore';
 import { jwtDecode } from './lib/jwt';
 
@@ -85,6 +86,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ScrollToTop />
         <CartSync />
         <NavBar />
         <Routes>

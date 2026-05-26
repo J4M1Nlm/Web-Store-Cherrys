@@ -9,7 +9,7 @@ export default function ToastContainer() {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className="pointer-events-auto glass-card px-4 py-3 flex items-center gap-3 min-w-[280px] max-w-sm animate-slide-up shadow-lg"
+          className="pointer-events-auto glass-card px-4 py-3 flex items-center gap-3 min-w-[280px] max-w-sm animate-slide-up shadow-lg hover:border-white/20 transition-all"
         >
           {toast.type === 'success' && <CheckCircle size={18} className="text-emerald-400 shrink-0" />}
           {toast.type === 'error' && <AlertCircle size={18} className="text-red-400 shrink-0" />}

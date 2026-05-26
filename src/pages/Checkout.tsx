@@ -14,6 +14,7 @@ import { useToast } from '../store/toastStore';
 import { useCartStore } from '../store/cartStore';
 import AddressForm from '../components/AddressForm';
 import StripePaymentForm from '../components/StripePaymentForm';
+import PageTransition from '../components/PageTransition';
 
 const STEPS = ['Shipping', 'Coupon', 'Summary', 'Payment'];
 
@@ -68,7 +69,7 @@ export default function Checkout() {
   });
 
   const initPaymentMutation = useMutation({
-    mutationFn: () => api.post<{ clientSecret: string }>('/payments/init', { orderId }).then((r) => r.data),
+    mutationFn: () => api.post<{ clientSecret: string }>('/payments/init', { orderId, totalCents: total, currency: cartData?.currency ?? 'MXN' }).then((r) => r.data),
     onSuccess: (data) => setClientSecret(data.clientSecret),
     onError: () => error('Failed to initialize payment'),
   });
@@ -84,6 +85,7 @@ export default function Checkout() {
   const total = Math.max(0, subtotal - discount);
 
   return (
+    <PageTransition>
     <div className="gradient-bg min-h-screen pt-24 pb-16">
       <div className="max-w-3xl mx-auto px-4">
         <h1 className="text-3xl font-bold text-white mb-8">Checkout</h1>
@@ -294,5 +296,6 @@ export default function Checkout() {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 }

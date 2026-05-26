@@ -6,6 +6,7 @@ import api from '../lib/axios';
 import GlassInput from '../components/ui/GlassInput';
 import GlassButton from '../components/ui/GlassButton';
 import { useToast } from '../store/toastStore';
+import PageTransition from '../components/PageTransition';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -25,8 +26,9 @@ export default function ForgotPassword() {
   };
 
   return (
+    <PageTransition>
     <div className="gradient-bg min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md animate-slide-up">
+      <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6 group">
             <Heart size={24} className="text-cherry group-hover:scale-110 transition-transform" fill="currentColor" />
@@ -75,5 +77,6 @@ export default function ForgotPassword() {
         </div>
       </div>
     </div>
+    </PageTransition>
   );
 }

@@ -7,6 +7,7 @@ import ProductCard from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ui/Skeleton';
 import GlassInput from '../components/ui/GlassInput';
 import GlassButton from '../components/ui/GlassButton';
+import PageTransition from '../components/PageTransition';
 
 interface Filters {
   q: string;
@@ -65,6 +66,7 @@ export default function Products() {
   const hasActiveFilters = Object.values(appliedFilters).some(Boolean);
 
   return (
+    <PageTransition>
     <div className="gradient-bg min-h-screen pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
@@ -201,8 +203,10 @@ export default function Products() {
             ) : (
               <>
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {data?.content.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                  {data?.content.map((product, i) => (
+                    <div key={product.id} className={`animate-stagger-${(i % 8) + 1}`}>
+                      <ProductCard product={product} />
+                    </div>
                   ))}
                 </div>
 
@@ -237,6 +241,7 @@ export default function Products() {
         </div>
       </div>
     </div>
+    </PageTransition>
   );
 }
 

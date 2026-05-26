@@ -84,7 +84,7 @@ export default function Dashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        <Link to="/admin/orders" className="glass-card p-4 hover:border-white/20 transition-all group">
+        <Link to="/admin/orders" className="glass-card p-4 hover:border-white/20 transition-all group animate-stagger-1">
           <div className="flex items-center justify-between mb-3">
             <div className="w-9 h-9 bg-cherry/15 rounded-xl flex items-center justify-center group-hover:bg-cherry/25 transition-colors">
               <ShoppingBag size={16} className="text-cherry" />
@@ -94,7 +94,7 @@ export default function Dashboard() {
           <p className="text-xs text-white/40">Total Orders</p>
         </Link>
 
-        <div className="glass-card p-4">
+        <div className="glass-card p-4 animate-stagger-2">
           <div className="flex items-center justify-between mb-3">
             <div className="w-9 h-9 bg-blue-500/15 rounded-xl flex items-center justify-center">
               <Package size={16} className="text-blue-400" />
@@ -104,7 +104,7 @@ export default function Dashboard() {
           <p className="text-xs text-white/40">Total Products</p>
         </div>
 
-        <div className="glass-card p-4">
+        <div className="glass-card p-4 animate-stagger-3">
           <div className="flex items-center justify-between mb-3">
             <div className="w-9 h-9 bg-emerald-500/15 rounded-xl flex items-center justify-center">
               <DollarSign size={16} className="text-emerald-400" />
@@ -114,7 +114,7 @@ export default function Dashboard() {
           <p className="text-xs text-white/40">Total Revenue</p>
         </div>
 
-        <div className="glass-card p-4">
+        <div className="glass-card p-4 animate-stagger-4">
           <div className="flex items-center justify-between mb-3">
             <div className="w-9 h-9 bg-purple-500/15 rounded-xl flex items-center justify-center">
               <UserCog size={16} className="text-purple-400" />
@@ -126,7 +126,7 @@ export default function Dashboard() {
       </div>
 
       {/* Orders Breakdown */}
-      <GlassCard className="p-5">
+      <GlassCard className="p-5 animate-fade-in-up">
         <h2 className="text-sm font-semibold text-white/50 uppercase tracking-widest mb-4">Orders Breakdown</h2>
         <div className="flex flex-col lg:flex-row items-center gap-8">
           <div className="w-56 h-56 min-w-[224px] flex-shrink-0">
@@ -192,9 +192,9 @@ export default function Dashboard() {
       <div>
         <h2 className="text-sm font-semibold text-white/50 uppercase tracking-widest mb-4">Quick Access</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {quickLinks.map(({ to, label, icon: Icon, description }) => (
+          {quickLinks.map(({ to, label, icon: Icon, description }, i) => (
             <Link key={to} to={to}>
-              <GlassCard className="p-4 hover:border-white/20 transition-all group">
+              <GlassCard className={`p-4 hover:border-white/20 transition-all group animate-stagger-${(i % 8) + 1}`}>
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-9 h-9 bg-cherry/15 rounded-xl flex items-center justify-center group-hover:bg-cherry/25 transition-colors">
                     <Icon size={16} className="text-cherry" />
