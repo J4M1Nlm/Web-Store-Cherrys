@@ -61,14 +61,20 @@ export interface SpringPage<T> {
 }
 
 export interface CartItem {
-  itemId: number;
+  id: number;
   variantId: number;
+  productId: number;
   productName: string;
+  productSlug: string;
   sku: string;
   variantName: string | null;
+  attributes: Record<string, string>;
   quantity: number;
   unitPriceCents: number;
-  subtotalCents: number;
+  lineTotalCents: number;
+  currency: string;
+  stockOnHand: number;
+  variantActive: boolean;
   mainImageUrl: string | null;
 }
 

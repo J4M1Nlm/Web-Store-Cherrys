@@ -86,7 +86,7 @@ export default function Cart() {
             {/* Items */}
             <div className="lg:col-span-2 space-y-3">
               {cart.items.map((item) => (
-                <GlassCard key={item.itemId} className="p-4 flex gap-4">
+                <GlassCard key={item.id} className="p-4 flex gap-4">
                   <div className="w-20 h-20 rounded-xl overflow-hidden bg-white/5 flex-shrink-0">
                     {item.mainImageUrl ? (
                       <img src={item.mainImageUrl} alt={item.productName} className="w-full h-full object-cover" />
@@ -103,14 +103,14 @@ export default function Cart() {
                     <div className="flex items-center justify-between mt-3">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => item.quantity > 1 && updateMutation.mutate({ itemId: item.itemId, quantity: item.quantity - 1 })}
+                          onClick={() => item.quantity > 1 && updateMutation.mutate({ itemId: item.id, quantity: item.quantity - 1 })}
                           className="w-7 h-7 glass-card rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"
                         >
                           <Minus size={12} />
                         </button>
                         <span className="w-8 text-center text-sm text-white">{item.quantity}</span>
                         <button
-                          onClick={() => updateMutation.mutate({ itemId: item.itemId, quantity: item.quantity + 1 })}
+                          onClick={() => updateMutation.mutate({ itemId: item.id, quantity: item.quantity + 1 })}
                           className="w-7 h-7 glass-card rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"
                         >
                           <Plus size={12} />
@@ -118,9 +118,9 @@ export default function Cart() {
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <p className="text-sm font-semibold text-cherry">{formatPrice(item.subtotalCents, cart.currency)}</p>
+                        <p className="text-sm font-semibold text-cherry">{formatPrice(item.lineTotalCents, cart.currency)}</p>
                         <button
-                          onClick={() => removeMutation.mutate(item.itemId)}
+                          onClick={() => removeMutation.mutate(item.id)}
                           className="p-1.5 rounded-lg hover:bg-red-500/10 transition-colors text-white/30 hover:text-red-400"
                         >
                           <Trash2 size={14} />
